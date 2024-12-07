@@ -20,5 +20,18 @@
   "bugs": {
     "url": "https://github.com/NekoSakuraLucia/Neko-Logging/issues"
   },
-  "homepage": "https://github.com/NekoSakuraLucia/Neko-Logging#readme"
+  "homepage": "https://github.com/NekoSakuraLucia/Neko-Logging#readme",
+  "dependencies": {
+    "chalk": "4.1.0",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }
