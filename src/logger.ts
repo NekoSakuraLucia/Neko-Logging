@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+
 import { LogData, NekoLoggingOptions } from "./types";
 import { getCurrentTimestamp } from "./utils";
 import { formatLog } from "./formatter";
+import { Logger } from "./levels";
 
 const defaultOptions: NekoLoggingOptions = {
     logTime: true,
@@ -32,7 +34,7 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
 
             const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
 
-            console.log(logMessage);
+            Logger.info(logMessage);
         });
 
         next();

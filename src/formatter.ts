@@ -9,11 +9,11 @@ export function formatLog(log: LogData, config: NekoLoggingOptions): string {
     }
 
     if (config.logMethod) {
-        parts.push(chalk.blue(log.method));
+        parts.push(chalk.greenBright(log.method));
     }
 
     if (config.logUrl) {
-        parts.push(chalk.magenta(log.url));
+        parts.push(chalk.magentaBright(log.url));
     }
 
     if (config.logStatus) {

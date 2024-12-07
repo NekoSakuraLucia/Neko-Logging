@@ -1,2 +1,3 @@
 export { NekoLogging } from "./logger";
-export { NekoLoggingOptions } from "./types";
+export { Logger } from "./levels";
+export type { NekoLoggingOptions, LogData } from "./types";
