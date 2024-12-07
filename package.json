@@ -1,0 +1,24 @@
+{
+  "name": "neko-logging",
+  "version": "0.1.0",
+  "description": "A customizable Express logging middleware with beautiful output using Chalk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NekoSakuraLucia/Neko-Logging.git"
+  },
+  "keywords": [
+    "Express",
+    "Logging",
+    "Middleware"
+  ],
+  "author": "NekoSakuraLucia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NekoSakuraLucia/Neko-Logging/issues"
+  },
+  "homepage": "https://github.com/NekoSakuraLucia/Neko-Logging#readme"
+}
