@@ -1,30 +1,38 @@
 import { Request, Response, NextFunction } from "express";
-import chalk from "chalk";
+import { LogData, NekoLoggingOptions } from "./types";
+import { getCurrentTimestamp } from "./utils";
+import { formatLog } from "./formatter";
+
+const defaultOptions: NekoLoggingOptions = {
+    logTime: true,
+    logMethod: true,
+    logUrl: true,
+    logStatus: true,
+    logResponseTime: true
+};
 
 /**
  * Logging middleware for Express.
  * Logs request method, URL, status code, and response time.
  */
-export function NekoLogging() {
+export function NekoLogging(options: NekoLoggingOptions = {}) {
+    const config = { ...defaultOptions, ...options };
     return function (req: Request, res: Response, next: NextFunction) {
         const startTime = Date.now();
 
         res.on("finish", () => {
             const responseTime = Date.now() - startTime;
-            const statusColor =
-                res.statusCode >= 500
-                    ? chalk.red
-                    : res.statusCode >= 400
-                        ? chalk.yellow
-                        : res.statusCode >= 300
-                            ? chalk.cyan : chalk.green;
+            const logData: LogData = {
+                method: req.method,
+                url: req.originalUrl,
+                statusCode: res.statusCode,
+                responseTime,
+                timestamp: getCurrentTimestamp()
+            };
 
-            console.log(
-                `${chalk.gray(`[${new Date().toISOString()}]`)} ` +
-                `${chalk.blue(req.method)} ${chalk.magenta(req.url)} ` +
-                `${statusColor(res.statusCode.toString())} ` +
-                `${chalk.gray(`${responseTime}ms`)}`
-            );
+            const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
+
+            console.log(logMessage);
         });
 
         next();
