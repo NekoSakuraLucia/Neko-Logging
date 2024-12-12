@@ -34,7 +34,7 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
 
             const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
 
-            Logger.info(logMessage);
+            Logger.info(null, logMessage);
         });
 
         next();
