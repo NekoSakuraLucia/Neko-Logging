@@ -11,7 +11,8 @@ const defaultOptions: NekoLoggingOptions = {
     logUrl: true,
     logStatus: true,
     logResponseTime: true,
-    ignoreRoutes: []
+    ignoreRoutes: [],
+    customTransport: undefined
 };
 
 /**
@@ -20,14 +21,14 @@ const defaultOptions: NekoLoggingOptions = {
  */
 export function NekoLogging(options: NekoLoggingOptions = {}) {
     const config = { ...defaultOptions, ...options };
-    return function (req: Request, res: Response, next: NextFunction) {
+    return async function (req: Request, res: Response, next: NextFunction) {
         if (config.ignoreRoutes?.includes(req.originalUrl)) {
             return next();
         }
 
         const startTime = Date.now();
 
-        res.on("finish", () => {
+        res.on("finish", async () => {
             const responseTime = Date.now() - startTime;
             const logData: LogData = {
                 method: req.method,
@@ -40,6 +41,14 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
             const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
 
             Logger.info(null, logMessage);
+
+            if (config.customTransport) {
+                try {
+                    await config.customTransport(logData, logMessage);
+                } catch (error) {
+                    Logger.error("TRANSPORT", `Failed to send log to custom transport: ${error}`)
+                }
+            }
         });
 
         next();
