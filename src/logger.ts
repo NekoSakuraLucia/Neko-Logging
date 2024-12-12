@@ -10,7 +10,8 @@ const defaultOptions: NekoLoggingOptions = {
     logMethod: true,
     logUrl: true,
     logStatus: true,
-    logResponseTime: true
+    logResponseTime: true,
+    ignoreRoutes: []
 };
 
 /**
@@ -20,6 +21,10 @@ const defaultOptions: NekoLoggingOptions = {
 export function NekoLogging(options: NekoLoggingOptions = {}) {
     const config = { ...defaultOptions, ...options };
     return function (req: Request, res: Response, next: NextFunction) {
+        if (config.ignoreRoutes?.includes(req.originalUrl)) {
+            return next();
+        }
+
         const startTime = Date.now();
 
         res.on("finish", () => {

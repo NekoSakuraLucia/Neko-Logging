@@ -5,6 +5,7 @@ export interface NekoLoggingOptions {
     logStatus?: boolean;
     logResponseTime?: boolean;
     customFormat?: (log: LogData) => string;
+    ignoreRoutes?: string[];
 }
 
 export interface LogData {
