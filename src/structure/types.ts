@@ -7,6 +7,7 @@ export interface NekoLoggingOptions {
     customFormat?: (log: LogData) => string;
     ignoreRoutes?: string[];
     customTransport?: (data: LogData, formattedMessage: string) => Promise<void>;
+    logCache?: boolean;
 }
 
 export interface LogData {

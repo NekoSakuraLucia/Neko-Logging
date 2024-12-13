@@ -12,16 +12,24 @@ const defaultOptions: NekoLoggingOptions = {
     logStatus: true,
     logResponseTime: true,
     ignoreRoutes: [],
-    customTransport: undefined
+    customTransport: undefined,
+    logCache: false
 };
 
 /**
  * Logging middleware for Express.
- * Logs request method, URL, status code, and response time.
+ * Logs request method, URL, status code, response time, and optionally caches URLs.
+ * If logCache is true, already logged URLs are cached and won't be logged again.
  */
 export function NekoLogging(options: NekoLoggingOptions = {}) {
     const config = { ...defaultOptions, ...options };
+    const urlCache: Set<string> = new Set();
+    
     return async function (req: Request, res: Response, next: NextFunction) {
+        if (config.logCache && urlCache.has(req.originalUrl)) {
+            return next();
+        }
+
         if (config.ignoreRoutes?.includes(req.originalUrl)) {
             return next();
         }
@@ -37,6 +45,10 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
                 responseTime,
                 timestamp: getCurrentTimestamp()
             };
+
+            if (config.logCache) {
+                urlCache.add(req.originalUrl);
+            }
 
             const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
 
