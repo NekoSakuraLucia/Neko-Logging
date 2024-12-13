@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
+import { appendFile } from "fs/promises";
 import { LogData, NekoLoggingOptions } from "./types";
 import { getCurrentTimestamp } from "./utils";
 import { formatLog } from "./formatter";
@@ -13,7 +14,8 @@ const defaultOptions: NekoLoggingOptions = {
     logResponseTime: true,
     ignoreRoutes: [],
     customTransport: undefined,
-    logCache: false
+    logCache: false,
+    logSave: undefined
 };
 
 /**
@@ -24,7 +26,7 @@ const defaultOptions: NekoLoggingOptions = {
 export function NekoLogging(options: NekoLoggingOptions = {}) {
     const config = { ...defaultOptions, ...options };
     const urlCache: Set<string> = new Set();
-    
+
     return async function (req: Request, res: Response, next: NextFunction) {
         if (config.logCache && urlCache.has(req.originalUrl)) {
             return next();
@@ -46,13 +48,22 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
                 timestamp: getCurrentTimestamp()
             };
 
+            const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
+
+            Logger.info(null, logMessage);
+
             if (config.logCache) {
                 urlCache.add(req.originalUrl);
             }
 
-            const logMessage = config.customFormat ? config.customFormat(logData) : formatLog(logData, config);
-
-            Logger.info(null, logMessage);
+            // Log to file if logSave is specified
+            if (config.logSave) {
+                try {
+                    await appendFile(config.logSave, logMessage + "\n", "utf-8")
+                } catch (error) {
+                    Logger.error("FILE", `Failed to save log to file: ${error}`)
+                }
+            }
 
             if (config.customTransport) {
                 try {

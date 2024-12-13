@@ -44,6 +44,10 @@ export interface NekoLoggingOptions {
      * If enabled, previously logged URLs will not be logged again.
      */
     logCache?: boolean;
+    /**
+     * File path for saving logs
+     */
+    logSave?: string;
 }
 
 /**
