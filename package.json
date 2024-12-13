@@ -2,19 +2,13 @@
   "name": "neko-logging",
   "version": "0.1.0",
   "description": "A customizable Express logging middleware with beautiful output using Chalk",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
-  "exports": {
-    "./cjs": "./dist/cjs/index.js",
-    "./esm": "./dist/esm/index.js",
-    "./types": "./dist/types/index.d.ts"
-  },
   "scripts": {
-    "build": "tsup"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -39,7 +33,6 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.1",
     "ts-node": "^10.9.2",
-    "tsup": "^8.3.5",
     "typescript": "^5.7.2"
   },
   "engines": {
