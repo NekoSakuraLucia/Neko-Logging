@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 
-import { appendFile } from "fs/promises";
 import { LogData, NekoLoggingOptions } from "./types";
 import { getCurrentTimestamp } from "./utils";
 import { formatLog } from "./formatter";
 import { Logger } from "./levels";
+
+import { appendFile } from "fs/promises";
+import { unstyle } from "ansi-colors";
 
 const defaultOptions: NekoLoggingOptions = {
     logTime: true,
@@ -59,7 +61,8 @@ export function NekoLogging(options: NekoLoggingOptions = {}) {
             // Log to file if logSave is specified
             if (config.logSave) {
                 try {
-                    await appendFile(config.logSave, logMessage + "\n", "utf-8")
+                    const plainMessage = unstyle(logMessage)
+                    await appendFile(config.logSave, plainMessage + "\n", "utf-8")
                 } catch (error) {
                     Logger.error("FILE", `Failed to save log to file: ${error}`)
                 }
